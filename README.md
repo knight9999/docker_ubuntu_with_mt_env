@@ -18,6 +18,8 @@ Movable Type本体は入っていません.
 
 ## イメージファイルの作成
 
+`git clone`したディレクトリ(Dockerfileが存在するディレクトリ)に移動して、以下を実行します。
+
 ```
 $ docker build -t ubuntu_with_mt_env:16.10 .
 ```
