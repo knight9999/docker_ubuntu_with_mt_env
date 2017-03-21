@@ -29,7 +29,7 @@ $ docker build -t ubuntu_with_mt_env:16.10 .
 ## コンテナの起動
 
 ```
-docker run --privileged -p 8022:22 -p 8080:80 -v [/path_to_your_local_pc_public_path]:/mnt/ -it ubuntu_with_mt_env:16.10
+$ docker run --privileged -p 8022:22 -p 8080:80 -v [/path_to_your_local_pc_public_path]:/mnt/ -it ubuntu_with_mt_env:16.10
 ```
 
 上記では、ポートは、ローカルの8022を22へ、8080を80へフォワードしています。適時、自分の環境に合わせてください。
@@ -38,7 +38,7 @@ docker run --privileged -p 8022:22 -p 8080:80 -v [/path_to_your_local_pc_public_
 例えば、私の環境では次のようになります。
 
 ```
-docker run --privileged -p 8022:22 -p 8080:80 -v ~/Documents/work/docker/mnt/mt_public:/mnt/ -it ubuntu_with_mt_env:16.10
+$ docker run --privileged -p 8022:22 -p 8080:80 -v ~/Documents/work/docker/mnt/mt_public:/mnt/ -it ubuntu_with_mt_env:16.10
 ```
 
 
