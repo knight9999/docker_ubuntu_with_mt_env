@@ -41,6 +41,8 @@ RUN cpanm YAML && \
     cpanm Mail::Sendmail
 
 COPY 000-default.conf /etc/apache2/sites-available/
+COPY HOW_TO_INSTALL.md /
+COPY HOW_TO_INSTALL_JA.md /
 
 ENTRYPOINT service apache2 start && service mysql start && service postfix start && bash
 
