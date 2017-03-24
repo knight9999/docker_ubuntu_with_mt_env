@@ -21,7 +21,7 @@ Movable Type本体は入っていません.
 `git clone`したディレクトリ(Dockerfileが存在するディレクトリ)に移動して、以下を実行します。
 
 ```
-$ docker build -t ubuntu_with_mt_env:1.0 .
+$ docker build -t ubuntu_with_mt_env .
 ```
 
 これで、ローカルにubuntu_with_mt_envイメージが作成されます。
@@ -29,27 +29,27 @@ $ docker build -t ubuntu_with_mt_env:1.0 .
 ## コンテナの起動
 
 ```
-$ docker run --privileged -p 8022:22 -p 8080:80 -v [/path_to_your_local_pc_public_path]:/mnt/ -it ubuntu_with_mt_env:1.0
+$ docker run --privileged -p 8022:22 -p 8080:80 -v /path/to/shared/directory:/mnt/ -it ubuntu_with_mt_env
 ```
 
 上記では、ポートは、ローカルの8022を22へ、8080を80へフォワードしています。適時、自分の環境に合わせてください。
-また [/path_to_your_local_pc_public_path]は、ローカルPC上の公開ディレクトリ(Document Rootとして利用したいディレクトリ)のパスを指定します。
+また /path/to/shared/directoryは、ホストPCでシェアしたいディレクトリを指定してください。使わなければ、設定しなくてもかまいません。
 
 例えば、私の環境では次のようになります。
 
 ```
-$ docker run --privileged -p 8022:22 -p 8080:80 -v ~/Documents/work/docker/mnt/mt_public:/mnt/ -it ubuntu_with_mt_env:1.0
+$ docker run --privileged -p 8022:22 -p 8080:80 -v ~/Documents/work/docker/mnt/share:/mnt/ -it ubuntu_with_mt_env
 ```
 
 
 ## MTファイルの配置
 
-一番簡単に使うのであればローカルPC上の公開ディレクトリ(ここでは、mt_publicとしています)の下に、mtファイルの一式を起きます。
+一番簡単に使うのであれば、コンテナ上のDocument Root /var/wwwの下に、mtファイルの一式を起きます。
 
 ディレクトリ構成は
 
 ```
-mt_public
+www
   - mt
     - mt-config.cgi
     - その他のファイル
@@ -58,10 +58,10 @@ mt_public
 ```
 となります。
 
-mt_publicとmtディレクトリは、読み書き可能にして下さい。(MTをインストール完了後は、mtディレクトリは書き込み不可にしても大丈夫です)
+wwwとmtディレクトリは、読み書き可能にして下さい。(MTをインストール完了後は、mtディレクトリは書き込み不可にしても大丈夫です)
 
-また、supportディレクトリも、読み書き可能にして下さい。
-/
+また、mt-static/supportディレクトリも、読み書き可能にして下さい。
+
 
 ## データベースの準備
 
@@ -76,7 +76,7 @@ $ mysql -u root
 ## Apacheの設定
 
 Apacheの設定ファイルである`/etc/apache2/sites-enabled/000-default.conf`
-では、Document Rootとして`/mnt`がマウントされているので、このまま利用出来ます。マウントするディレクトリは、適時変更してください。
+では、cgiが使えるように設定してあります。Document Rootを変更する場合は、適時変更を行ってください。
 
 ## MTのインストール
 
