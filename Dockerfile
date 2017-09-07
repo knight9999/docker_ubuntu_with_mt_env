@@ -18,7 +18,7 @@ RUN apt-get install -y apache2
 
 RUN apt-get install -y imagemagick
 
-RUN apt-get install -y perlmagick 
+RUN apt-get install -y perlmagick
 
 RUN apt-get install -y postfix
 
@@ -27,7 +27,7 @@ RUN apt-get install -y vim
 RUN apt-get install -y cpanminus
 
 RUN update-rc.d apache2 defaults && \
-    update-rc.d mysql defaults 
+    update-rc.d mysql defaults
 
 RUN a2enmod cgi
 
@@ -40,9 +40,9 @@ RUN cpanm YAML && \
     cpanm Imager && \
     cpanm Mail::Sendmail
 
-COPY 000-default.conf /etc/apache2/sites-available/
-COPY HOW_TO_INSTALL.md /
-COPY HOW_TO_INSTALL_JA.md /
+COPY files/000-default.conf /etc/apache2/sites-available/
+COPY files/HOW_TO_INSTALL.md /
+COPY files/HOW_TO_INSTALL_JA.md /
+COPY files/entry-script.bash /entry-script.bash
 
-ENTRYPOINT service apache2 start && service mysql start && service postfix start && bash
-
+CMD ["/entry-script.bash"]

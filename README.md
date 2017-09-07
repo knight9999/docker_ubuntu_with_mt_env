@@ -29,18 +29,19 @@ $ docker build -t ubuntu_with_mt_env .
 ## コンテナの起動
 
 ```
-$ docker run --privileged -p 8022:22 -p 8080:80 -v /path/to/shared/directory:/mnt/ -it ubuntu_with_mt_env
+$ docker run --privileged -d --name mt -p 8022:22 -p 8080:80 -v /path/to/shared/directory:/var/www/ -it ubuntu_with_mt_env
 ```
 
 上記では、ポートは、ローカルの8022を22へ、8080を80へフォワードしています。適時、自分の環境に合わせてください。
-また /path/to/shared/directoryは、ホストPCでシェアしたいディレクトリを指定してください。使わなければ、設定しなくてもかまいません。
-
-例えば、私の環境では次のようになります。
+(Docker 1.13以後ではWindowsでもファイルをマウントして利用できるようになったらしいので、/var/www/にマウントしています)
+また、コンテナにはmtという名前をつけていますが、任意のものでOKです。
 
 ```
-$ docker run --privileged -p 8022:22 -p 8080:80 -v ~/Documents/work/docker/mnt/share:/mnt/ -it ubuntu_with_mt_env
+$ docker run --privileged -d --name mt -p 8022:22 -p 8080:80 -v ~/Documents/work/docker/mnt/share:/var/www/ -it ubuntu_with_mt_env
 ```
 
+これでデーモンが起動しますが、ターミナルは開きません。(このDockerfileのVer 1.0とは違います)
+ターミナルを開く場合は、後述の`docker exec`を使ってください。
 
 ## MTファイルの配置
 
@@ -77,6 +78,26 @@ $ mysql -u root
 
 Apacheの設定ファイルである`/etc/apache2/sites-enabled/000-default.conf`
 では、cgiが使えるように設定してあります。Document Rootを変更する場合は、適時変更を行ってください。
+
+
+## デーモンを停止する
+
+```
+$ docker stop mt
+```
+
+## デーモンを起動する
+
+```
+$ docker start mt
+```
+
+## ターミナルに接続
+
+```
+$ docker exec -it mt bash
+```
+
 
 ## MTのインストール
 

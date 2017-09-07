@@ -5,7 +5,7 @@ How to install MT
 
 ```
 $ docker pull knaito/ubuntu_with_mt_env
-$ docker run --privileged -p 8022:22 -p 8080:80 -v /path/to/shared/directory:/mnt/ -it knaito/ubuntu_with_mt_env
+$ docker run --privileged -d --name mt -p 8022:22 -p 8080:80 -v ~/Documents/work/docker/mnt/share:/var/www/ -it ubuntu_with_mt_env
 ```
 
 ### MTのインストール
