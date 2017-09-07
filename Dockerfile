@@ -4,7 +4,7 @@ MAINTAINER KENICHI NAITO
 
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get update
+RUN apt-get update -y
 
 RUN apt-get install -y apt-utils
 
@@ -38,7 +38,7 @@ RUN cpanm YAML && \
     cpanm IPC::Run && \
     cpanm Archive::Zip && \
     cpanm Imager && \
-    cpanm Mail::Sendmail
+    cpanm -f Mail::Sendmail
 
 COPY files/000-default.conf /etc/apache2/sites-available/
 COPY files/HOW_TO_INSTALL.md /

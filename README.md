@@ -40,7 +40,7 @@ $ docker run --privileged -d --name mt -p 8022:22 -p 8080:80 -v /path/to/shared/
 $ docker run --privileged -d --name mt -p 8022:22 -p 8080:80 -v ~/Documents/work/docker/mnt/share:/var/www/ -it ubuntu_with_mt_env
 ```
 
-これでデーモンが起動しますが、ターミナルは開きません。(このDockerfileのVer 1.0とは違います)
+これでデーモンが起動しますが、ターミナルは開きません。(本Dockerfileのv1.0とは違います)
 ターミナルを開く場合は、後述の`docker exec`を使ってください。
 
 ## MTファイルの配置
