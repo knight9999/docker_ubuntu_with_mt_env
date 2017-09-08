@@ -43,6 +43,9 @@ RUN cpanm YAML && \
 COPY files/000-default.conf /etc/apache2/sites-available/
 COPY files/HOW_TO_INSTALL.md /
 COPY files/HOW_TO_INSTALL_JA.md /
+COPY files/mysqld.cnf /etc/mysql/mysql.conf.d/mysqld.cnf.docker
 COPY files/entry-script.bash /entry-script.bash
+
+RUN chmod a+x /entry-script.bash
 
 CMD ["/entry-script.bash"]

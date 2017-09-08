@@ -1,4 +1,12 @@
 #!/bin/bash
+
+mkdir -p /var/mt/www
+
+mkdir -p /var/mt/mysql
+
+cp -rpu /var/lib/mysql/* /var/mt/mysql
+cp -pu /etc/mysql/mysql.conf.d/mysqld.cnf.docker /etc/mysql/mysql.conf.d/mysqld.cnf
+
 service apache2 start
 service mysql start
 service postfix start

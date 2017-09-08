@@ -29,15 +29,16 @@ $ docker build -t ubuntu_with_mt_env .
 ## コンテナの起動
 
 ```
-$ docker run --privileged -d --name mt -p 8022:22 -p 8080:80 -v /path/to/shared/directory:/var/www/ -it ubuntu_with_mt_env
+$ docker run --privileged -d --name mt -p 8022:22 -p 8080:80 -v /path/to/shared/directory:/var/mt/ -it ubuntu_with_mt_env
 ```
 
 上記では、ポートは、ローカルの8022を22へ、8080を80へフォワードしています。適時、自分の環境に合わせてください。
-(Docker 1.13以後ではWindowsでもファイルをマウントして利用できるようになったらしいので、/var/www/にマウントしています)
+(Docker 1.13以後ではWindowsでもファイルをマウントして利用できるようになったらしいので、/var/mt/にマウントしています)
+マウントしているディレクトリには、wwwディレクトリが必要です。
 また、コンテナにはmtという名前をつけていますが、任意のものでOKです。
 
 ```
-$ docker run --privileged -d --name mt -p 8022:22 -p 8080:80 -v ~/Documents/work/docker/mnt/share:/var/www/ -it ubuntu_with_mt_env
+$ docker run --privileged -d --name mt -p 8022:22 -p 8080:80 -v ~/Documents/work/docker/mnt/mt:/var/mt/ -it ubuntu_with_mt_env
 ```
 
 これでデーモンが起動しますが、ターミナルは開きません。(本Dockerfileのv1.0とは違います)
@@ -45,17 +46,19 @@ $ docker run --privileged -d --name mt -p 8022:22 -p 8080:80 -v ~/Documents/work
 
 ## MTファイルの配置
 
-一番簡単に使うのであれば、コンテナ上のDocument Root /var/wwwの下に、mtファイルの一式を起きます。
+一番簡単に使うのであれば、コンテナ上のDocument Root /var/mt/wwwの下に(マウントしている場合はホスト上のマウントしているディレクトリでも良い)、mtファイルの一式を起きます。
 
 ディレクトリ構成は
 
 ```
-www
-  - mt
-    - mt-config.cgi
-    - その他のファイル
-    - mt-static
-      - support
+mt
+  - mysql
+  - www
+    - mt
+      - mt-config.cgi
+      - その他のファイル
+      - mt-static
+        - support
 ```
 となります。
 
