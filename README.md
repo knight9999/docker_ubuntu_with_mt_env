@@ -29,7 +29,7 @@ $ docker build -t ubuntu_with_mt_env .
 ## コンテナの起動
 
 ```
-$ docker run --privileged -d --name mt -p 8022:22 -p 8080:80 -v /path/to/shared/directory:/var/mt/ -it ubuntu_with_mt_env
+$ docker run --privileged -d --name mt_server -p 8022:22 -p 8080:80 -v /path/to/shared/directory:/var/mt/ -it ubuntu_with_mt_env
 ```
 
 上記では、ポートは、ローカルの8022を22へ、8080を80へフォワードしています。適時、自分の環境に合わせてください。
@@ -37,8 +37,13 @@ $ docker run --privileged -d --name mt -p 8022:22 -p 8080:80 -v /path/to/shared/
 マウントしているディレクトリには、wwwディレクトリが必要です。
 また、コンテナにはmtという名前をつけていますが、任意のものでOKです。
 
+例１：
 ```
-$ docker run --privileged -d --name mt -p 8022:22 -p 8080:80 -v ~/Documents/work/docker/mnt/mt:/var/mt/ -it ubuntu_with_mt_env
+$ docker run --privileged -d --name mt_server -p 8022:22 -p 8080:80 -v ~/Documents/work/docker/mnt/mt:/var/mt/ -it ubuntu_with_mt_env
+```
+例２：
+```
+$ docker run --privileged -d --name mt_server -p 8022:22 -p 8080:80 -v `pwd`/../mnt:/var/mt/ -it ubuntu_with_mt_env
 ```
 
 これでデーモンが起動しますが、ターミナルは開きません。(本Dockerfileのv1.0とは違います)
@@ -85,7 +90,7 @@ Postfixに必要な設定がある場合は、マウントしているディレ�
 
 ### 例：Gmailを中継サーバーに使う。
 
-/etc/postfix/main.cfを/path/to/shared/directory/postfixにコピー
+/etc/postfix/main.cfを/path/to/shared/directory/etc/postfixにコピー
 
 
 既存の
@@ -136,9 +141,13 @@ smtp_tls_CAfile = /etc/pki/tls/certs/ca-bundle.crt
 # postmap hash:/etc/postfix/sasl_passwd
 ```
 
-作成したsasl_passwdファイル、postmapコマンドで生成されたsasl_psswd.db
-を、/path/to/shared/directory/postfixにコピー
-(sasl_passwordは危険なので、コピーしなくても良いかも)
+postmapコマンドで生成されたsasl_psswd.db
+を、/path/to/shared/directory/etc/postfixにコピー
+
+反映させるために、hostに戻って
+
+$ docker stop mt_server
+$ docker start mt_server
 
 
 ## Apacheの設定

@@ -7,9 +7,9 @@ mkdir -p /var/mt/mysql
 cp -rpn /var/lib/mysql/* /var/mt/mysql/
 cp -pf /etc/mysql/mysql.conf.d/mysqld.cnf.docker /etc/mysql/mysql.conf.d/mysqld.cnf
 
-mkdir -p /var/mt/postfix
+mkdir -p /var/mt/etc
 
-cp -rpf /var/mt/postfix/* /etc/postfix/
+cp -rpf /var/mt/etc/* /etc/
 
 service rsyslog start
 service apache2 start
