@@ -5,7 +5,15 @@ How to install MT
 
 ```
 $ docker pull knaito/ubuntu_with_mt_env
-$ docker run --privileged -d --name mt -p 8022:22 -p 8080:80 -v ~/Documents/work/docker/mnt/share:/var/mt/ -it ubuntu_with_mt_env
+$ docker run --privileged -d --name mt_server -p 8022:22 -p 8080:80 -v ~/Documents/work/docker/mnt/share:/var/mt/ -it ubuntu_with_mt_env
+```
+
+### Terminal, Stop, Start container
+
+```
+$ docker exec -it mt_server /bin/bash
+$ docker stop mt_server
+$ docker start mt_server
 ```
 
 ### MTのインストール
@@ -15,3 +23,7 @@ $ docker run --privileged -d --name mt -p 8022:22 -p 8080:80 -v ~/Documents/work
 - mt/mt-static/supportディレクトリに、再帰的に書き込み権限をつけます。
 - MySQLでデータベースを作成します。
 - ブラウザで`http://localhost:8080/mt`にアクセスします。管理者ユーザーとウェブサイトをMTのインストールウィザードにしたがって作成します。
+
+### 詳細情報
+
+https://github.com/knight9999/docker_ubuntu_with_mt_env
