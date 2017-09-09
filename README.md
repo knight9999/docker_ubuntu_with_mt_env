@@ -77,6 +77,70 @@ $ mysql -u root
 > exit
 ```
 
+## Postfixの設定
+
+Postfixに必要な設定がある場合は、マウントしているディレクトリ(/path/to/shared/directory)に作られるpostfix以下に
+必要なファイル(main.cf)などを置いてください。Dockerコンテナ起動時に、その内容を/etc/postfixにコピーします。
+起動時以外には反映されないので注意してください。
+
+### 例：Gmailを中継サーバーに使う。
+
+/etc/postfix/main.cfを/path/to/shared/directory/postfixにコピー
+
+
+既存の
+```
+relayhost =
+```
+を削除
+
+次を追加
+
+```
+# GMail
+relayhost = [smtp.gmail.com]:587
+smtp_use_tls = yes
+smtp_tls_CApath = /etc/ssl/certs
+smtp_sasl_auth_enable = yes
+smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
+smtp_sasl_tls_security_options = noanonymous
+smtp_sasl_mechanism_filter = plain
+```
+
+(centOS系の場合は、
+```
+smtp_tls_CApath = /etc/ssl/certs
+```
+の代わりに
+```
+smtp_tls_CAfile = /etc/pki/tls/certs/ca-bundle.crt
+```
+らしい
+)
+
+コンテナ上で次を実行
+
+```
+# vi /etc/postfix/sasl_passwd
+```
+として、
+```
+[smtp.gmail.com]:587     <gmail_address>:<password>
+```
+を書き込む。
+
+として、次を実行
+
+```
+# chmod 600 /etc/postfix/sasl_passwd
+# postmap hash:/etc/postfix/sasl_passwd
+```
+
+作成したsasl_passwdファイル、postmapコマンドで生成されたsasl_psswd.db
+を、/path/to/shared/directory/postfixにコピー
+(sasl_passwordは危険なので、コピーしなくても良いかも)
+
+
 ## Apacheの設定
 
 Apacheの設定ファイルである`/etc/apache2/sites-enabled/000-default.conf`

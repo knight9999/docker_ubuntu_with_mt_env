@@ -4,9 +4,14 @@ mkdir -p /var/mt/www
 
 mkdir -p /var/mt/mysql
 
-cp -rpu /var/lib/mysql/* /var/mt/mysql
-cp -pu /etc/mysql/mysql.conf.d/mysqld.cnf.docker /etc/mysql/mysql.conf.d/mysqld.cnf
+cp -rpn /var/lib/mysql/* /var/mt/mysql/
+cp -pf /etc/mysql/mysql.conf.d/mysqld.cnf.docker /etc/mysql/mysql.conf.d/mysqld.cnf
 
+mkdir -p /var/mt/postfix
+
+cp -rpf /var/mt/postfix/* /etc/postfix/
+
+service rsyslog start
 service apache2 start
 service mysql start
 service postfix start
@@ -16,6 +21,7 @@ trap_TERM() {
   service apache2 stop
   service mysql stop
   service postfix stop
+  service rsyslog stop
   exit 0
 }
 trap 'trap_TERM' TERM

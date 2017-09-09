@@ -26,6 +26,8 @@ RUN apt-get install -y vim
 
 RUN apt-get install -y cpanminus
 
+RUN apt-get install -y rsyslog
+
 RUN update-rc.d apache2 defaults && \
     update-rc.d mysql defaults
 
