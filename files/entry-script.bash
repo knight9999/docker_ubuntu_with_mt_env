@@ -1,8 +1,14 @@
 #!/bin/bash
 
-mkdir -p /var/mt/www
+if [ ! -e /var/mt/www ]; then
+  mkdir -p /var/mt/www
+  chmod a+w /var/mt/www
+fi
 
-mkdir -p /var/mt/mysql
+if [ ! -e /var/mt/mysql ]; then
+  mkdir -p /var/mt/mysql
+  chmod a+w /var/mt/mysql
+fi
 
 cp -rpn /var/lib/mysql/* /var/mt/mysql/
 cp -pf /etc/mysql/mysql.conf.d/mysqld.cnf.docker /etc/mysql/mysql.conf.d/mysqld.cnf
