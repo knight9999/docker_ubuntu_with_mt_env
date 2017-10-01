@@ -149,6 +149,12 @@ postmapコマンドで生成されたsasl_psswd.db
 $ docker stop mt_server
 $ docker start mt_server
 
+## Gmail側で、安全性の低いアプリからのメールを許可する必要がある
+
+以下にアクセスして、安全性の低いアプリを許可しないといけないようです。
+
+https://support.google.com/accounts/answer/6010255?hl=ja
+
 
 ## Apacheの設定
 
