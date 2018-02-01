@@ -36,6 +36,8 @@ $ docker build -t ubuntu_with_mt_env .
 
 ## MySQL用のボリュームの用意
 
+例えば、`mt-storage`という名前のボリュームを作成するのであれば、
+
 ```
 $ docker volume create mt-storge
 ```
@@ -46,6 +48,11 @@ $ docker volume create mt-storge
 $ docker volume ls
 ```
 
+削除
+
+```
+$ docker volume rm mt-storage
+```
 
 ## コンテナの起動
 
@@ -112,7 +119,7 @@ wwwとmtディレクトリは、読み書き可能にして下さい。(MTをイ
 
 ## データベースの準備
 
-最初、自動で空のDBが作成されます。名前はMTDBです。自分でDBを作りたい場合、コンテナにログインして作成してください。mysqlのrootユーザーでパスワードなしで設定されています。
+最初、自動で空のDBが作成されます。名前はmtdbです。自分でDBを作りたい場合、コンテナにログインして作成してください。mysqlのrootユーザーでパスワードなしで設定されています。
 
 ```
 $ mysql -u root

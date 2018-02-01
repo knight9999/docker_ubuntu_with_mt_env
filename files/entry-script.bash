@@ -23,8 +23,11 @@ service postfix start
 
 if [ ! -e /started ]; then
   mysql -uroot -e "GRANT ALL PRIVILEGES ON *.* TO 'debian-sys-maint'@'localhost' IDENTIFIED BY 'asdjklsd1xja' WITH GRANT OPTION;"
-  V=$(mysql -uroot --skip-column-names -B -e "select host from mysql.user where host='%';")
-  mysql -uroot -e "CREATE DATABASE MTDB;"
+  V=$(mysql -uroot --skip-column-names -B -e "show databases like 'mtdb';")
+  if [[ -z "$V" ]]; then
+    echo "Create root@% user"
+    mysql -uroot -e "CREATE DATABASE mtdb;"
+  fi  
 fi
 
 touch /started
