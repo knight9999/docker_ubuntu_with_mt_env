@@ -14,6 +14,14 @@ Movable Type本体は入っていません.
 ローカル環境にMTを入れて、Docker環境にマウントして利用することを想定しています。
 
 
+docker hubにビルド済みのイメージがあります。こちらを使うときは、
+
+```
+$ docker pull knaito/ubuntu_with_mt_env
+```
+
+とします。こちらを使う場合は、イメージファイルの作成をスキップし、以後、ubuntu_with_mt_envは、knaito/ubuntu_with_mt_envと読み替えてください。
+
 # 使い方
 
 ## イメージファイルの作成
@@ -41,9 +49,13 @@ $ docker volume ls
 
 ## コンテナの起動
 
+例えば、`mt_server`という名前のコンテナを作成するのであれば、次のようにします。
+
 ```
 $ docker run --privileged -d --name mt_server -p 8022:22 -p 8080:80 -v /path/to/shared/directory:/var/mt/ -v mt-storage:/var/db/mysql  -it ubuntu_with_mt_env
 ```
+
+ここで、/path/to/shared/directoryは、マウントするディレクトリです。このディレクトリの下にwwwディレクトリが（もしなければ）作成され、以後、Apacheによりマウントされます。
 
 macであれば`pwd`を使って
 
@@ -51,16 +63,34 @@ macであれば`pwd`を使って
 $ docker run --privileged -d --name mt_server -p 8022:22 -p 8080:80 -v `pwd`/mt:/var/mt/ -v mt-storage:/var/db/mysql  -it ubuntu_with_mt_env
 ```
 
-ともできます
+ともできます。また、上記ではmt-storageというボリュームをコンテナ内の/var/db/mysqlにマウントしていますが、macの場合、mysqlのボリュームを直接ディレクトリにマウントしてもOKです。
+その場合は、例えば自分のローカルにmysqlというディレクトリを作成して
+
+```
+$ docker run --privileged -d --name mt_server -p 8022:22 -p 8080:80 -v `pwd`/mt:/var/mt/ -v `pwd`/mysql:/var/db/mysql  -it ubuntu_with_mt_env
+```
+
+のようにします。
 
 
 
 これでデーモンが起動しますが、ターミナルは開きません。(本Dockerfileのv1.0とは違います)
 ターミナルを開く場合は、後述の`docker exec`を使ってください。
 
+## コンテナへのログイン
+
+次でログインします
+
+```
+$ docker exec -it mt_server bash
+```
+
+
+
+
 ## MTファイルの配置
 
-一番簡単に使うのであれば、コンテナ上のDocument Root /var/mt/wwwの下に(ホスト上のマウントしているディレクトリでも良い)、mtファイルの一式を起きます。
+一番簡単に使うのであれば、コンテナ上のDocument Root /var/mt/wwwの下に(ホスト上のマウントしているディレクトリ`/path/to/shared/directory`の下の`mt/www`の下でも良い)、mtファイルの一式を起きます。
 
 ディレクトリ構成は
 
@@ -82,7 +112,7 @@ wwwとmtディレクトリは、読み書き可能にして下さい。(MTをイ
 
 ## データベースの準備
 
-コンテナ内で、データベースを作成してください。mysqlのrootユーザーは、パスワードなしで設定されています。
+最初、自動で空のDBが作成されます。名前はMTDBです。自分でDBを作りたい場合、コンテナにログインして作成してください。mysqlのrootユーザーでパスワードなしで設定されています。
 
 ```
 $ mysql -u root
@@ -103,9 +133,9 @@ Postfixに必要な設定がある場合は、マウントしているディレ�
 
 ### 例：Gmailを中継サーバーに使う。
 
-/etc/postfix/main.cfを/path/to/shared/directory/etc/postfixにコピー
+`/etc/postfix/main.cf` を `/path/to/shared/directory/etc/postfix` にコピー
 
-
+`main.cf` を編集します。
 既存の
 ```
 relayhost =
@@ -175,13 +205,13 @@ Apacheの設定ファイルである`/etc/apache2/sites-enabled/000-default.conf
 では、cgiが使えるように設定してあります。Document Rootを変更する場合は、適時変更を行ってください。
 
 
-## デーモンを停止する
+## コンテナを停止する
 
 ```
 $ docker stop mt
 ```
 
-## デーモンを起動する
+## コンテナを起動する
 
 ```
 $ docker start mt
