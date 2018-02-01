@@ -4,7 +4,7 @@ Movable Type用Dockerファイル
 
 # 概要
 
-ベースとなるOSは、Ubuntu 16.10です。
+ベースとなるOSは、Ubuntu 17.10です。
 
 Movable Typeを動作させるためのApache,MySQL,ImageMagick,各種CPANファイル
 などを組み込んだDockerfileです。
@@ -26,38 +26,46 @@ $ docker build -t ubuntu_with_mt_env .
 
 これで、ローカルにubuntu_with_mt_envイメージが作成されます。
 
+## MySQL用のボリュームの用意
+
+```
+$ docker volume create mt-storge
+```
+
+確認
+
+```
+$ docker volume ls
+```
+
+
 ## コンテナの起動
 
 ```
-$ docker run --privileged -d --name mt_server -p 8022:22 -p 8080:80 -v /path/to/shared/directory:/var/mt/ -it ubuntu_with_mt_env
+$ docker run --privileged -d --name mt_server -p 8022:22 -p 8080:80 -v /path/to/shared/directory:/var/mt/ -v mt-storage:/var/db/mysql  -it ubuntu_with_mt_env
 ```
 
-上記では、ポートは、ローカルの8022を22へ、8080を80へフォワードしています。適時、自分の環境に合わせてください。
-(Docker 1.13以後ではWindowsでもファイルをマウントして利用できるようになったらしいので、/var/mt/にマウントしています)
-マウントしているディレクトリには、wwwディレクトリが必要です。
-また、コンテナにはmtという名前をつけていますが、任意のものでOKです。
+macであれば`pwd`を使って
 
-例１：
 ```
-$ docker run --privileged -d --name mt_server -p 8022:22 -p 8080:80 -v ~/Documents/work/docker/mnt/mt:/var/mt/ -it ubuntu_with_mt_env
+$ docker run --privileged -d --name mt_server -p 8022:22 -p 8080:80 -v `pwd`/mt:/var/mt/ -v mt-storage:/var/db/mysql  -it ubuntu_with_mt_env
 ```
-例２：
-```
-$ docker run --privileged -d --name mt_server -p 8022:22 -p 8080:80 -v `pwd`/../mnt:/var/mt/ -it ubuntu_with_mt_env
-```
+
+ともできます
+
+
 
 これでデーモンが起動しますが、ターミナルは開きません。(本Dockerfileのv1.0とは違います)
 ターミナルを開く場合は、後述の`docker exec`を使ってください。
 
 ## MTファイルの配置
 
-一番簡単に使うのであれば、コンテナ上のDocument Root /var/mt/wwwの下に(マウントしている場合はホスト上のマウントしているディレクトリでも良い)、mtファイルの一式を起きます。
+一番簡単に使うのであれば、コンテナ上のDocument Root /var/mt/wwwの下に(ホスト上のマウントしているディレクトリでも良い)、mtファイルの一式を起きます。
 
 ディレクトリ構成は
 
 ```
 mt
-  - mysql
   - www
     - mt
       - mt-config.cgi
@@ -67,7 +75,7 @@ mt
 ```
 となります。
 
-wwwとmtディレクトリは、読み書き可能にして下さい。(MTをインストール完了後は、mtディレクトリは書き込み不可にしても大丈夫です)
+wwwとmtディレクトリは、読み書き可能にして下さい。(MTをインストール完了後は、mtディレクトリは書き込み不可にしても大丈夫です。いつものmtの設定です)
 
 また、mt-static/supportディレクトリも、読み書き可能にして下さい。
 
@@ -81,6 +89,11 @@ $ mysql -u root
 > create database mt_db;
 > exit
 ```
+
+## 注意事項
+
+mysqlを起動・終了させるためのユーザーdebian-sys-maintはハードコーディングされているので、変更したい場合は、
+files/etc/mysql/debian.cnfを修正し、合わせてfiles/entry-script.bashの中のパスワードも変更してください。
 
 ## Postfixの設定
 
@@ -190,3 +203,9 @@ http://localhost:8080/mt
 ```
 
 でMTにアクセスしてください。インストールウィザードにしたがって、インストールを行います。
+
+## ChangeLog
+
+
+1.2 Based on Ubuntu 17.10. Mysql Volume is separated.
+1.0 Based on Ubuntu 16.10

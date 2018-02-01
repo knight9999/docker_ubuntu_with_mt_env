@@ -5,13 +5,12 @@ if [ ! -e /var/mt/www ]; then
   chmod a+w /var/mt/www
 fi
 
-if [ ! -e /var/mt/mysql ]; then
-  mkdir -p /var/mt/mysql
-  chmod a+w /var/mt/mysql
+if [ ! -e /var/db/mysql ]; then
+  mkdir -p /var/db/mysql
 fi
+chmod a+w /var/db/mysql
 
-cp -rpn /var/lib/mysql/* /var/mt/mysql/
-cp -pf /etc/mysql/mysql.conf.d/mysqld.cnf.docker /etc/mysql/mysql.conf.d/mysqld.cnf
+cp -rpn /var/lib/mysql/* /var/db/mysql/
 
 mkdir -p /var/mt/etc
 
@@ -21,6 +20,13 @@ service rsyslog start
 service apache2 start
 service mysql start
 service postfix start
+
+if [ ! -e /started ]; then
+  mysql -uroot -e "GRANT ALL PRIVILEGES ON *.* TO 'debian-sys-maint'@'localhost' IDENTIFIED BY 'asdjklsd1xja' WITH GRANT OPTION;"
+  V=$(mysql -uroot --skip-column-names -B -e "select host from mysql.user where host='%';")
+fi
+
+touch /started
 
 trap_TERM() {
   echo 'SIGTERM ACCEPTED.'
