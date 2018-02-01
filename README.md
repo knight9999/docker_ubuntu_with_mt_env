@@ -32,7 +32,7 @@ $ docker pull knaito/ubuntu_with_mt_env
 $ docker build -t ubuntu_with_mt_env .
 ```
 
-これで、ローカルにubuntu_with_mt_envイメージが作成されます。
+これで、ローカルにubuntu_with_mt_envイメージが作成されます。(名前は `ubuntu_with_mt_env`でなくても、なんでも構いません)
 
 ## MySQL用のボリュームの用意
 
