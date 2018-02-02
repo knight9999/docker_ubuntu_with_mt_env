@@ -22,6 +22,10 @@ $ docker pull knaito/ubuntu_with_mt_env
 
 とします。こちらを使う場合は、イメージファイルの作成をスキップし、以後、ubuntu_with_mt_envは、knaito/ubuntu_with_mt_envと読み替えてください。
 
+なお、ベースになっている`knaito/ubuntu_with_lamp:1.1`のgit repositoryは https://github.com/knight9999/docker_ubuntu_with_lamp です。
+
+
+
 # 使い方
 
 ## イメージファイルの作成
