@@ -123,7 +123,7 @@ wwwとmtディレクトリは、読み書き可能にして下さい。(MTをイ
 
 ```
 $ mysql -u root
-> create database mt_db;
+> create database データベース名;
 > exit
 ```
 
