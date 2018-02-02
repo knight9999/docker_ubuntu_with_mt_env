@@ -246,5 +246,5 @@ http://localhost:8080/mt
 ## ChangeLog
 
 
-1.2 Based on Ubuntu 17.10. Mysql Volume is separated.
-1.0 Based on Ubuntu 16.10
+- 1.2 Based on Ubuntu 17.10. Mysql Volume is separated.
+- 1.0 Based on Ubuntu 16.10
