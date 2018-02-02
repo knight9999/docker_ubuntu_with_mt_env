@@ -97,7 +97,7 @@ $ docker exec -it mt_server bash
 
 ## MTファイルの配置
 
-一番簡単に使うのであれば、コンテナ上のDocument Root /var/mt/wwwの下に(ホスト上のマウントしているディレクトリ`/path/to/shared/directory`の下の`mt/www`の下でも良い)、mtファイルの一式を起きます。
+一番簡単に使うのであれば、コンテナ上のDocument Root /var/mt/wwwの下に(ホスト上のマウントしているディレクトリ`/path/to/shared/directory`の下の`www`の下でも良い)、mtファイルの一式を起きます。
 
 ディレクトリ構成は
 
