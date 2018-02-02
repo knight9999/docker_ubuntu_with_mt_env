@@ -196,8 +196,10 @@ postmapコマンドで生成されたsasl_psswd.db
 
 反映させるために、hostに戻って
 
+```
 $ docker stop mt_server
 $ docker start mt_server
+```
 
 ## Gmail側で、安全性の低いアプリからのメールを許可する必要がある
 
