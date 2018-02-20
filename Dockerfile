@@ -15,6 +15,8 @@ RUN apt-get install -y cpanminus
 RUN update-rc.d apache2 defaults && \
     update-rc.d mysql defaults
 
+RUN apt-get install -y samba
+
 RUN cpanm YAML && \
     cpanm DBI && \
     cpanm DBD::mysql && \
