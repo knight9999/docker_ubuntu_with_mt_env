@@ -27,7 +27,7 @@ if [ ! -e /started ]; then
   if [[ -z "$V" ]]; then
     echo "Create root@% user"
     mysql -uroot -e "CREATE DATABASE mtdb;"
-  fi  
+  fi
 fi
 
 touch /started
