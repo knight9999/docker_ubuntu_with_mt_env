@@ -20,6 +20,7 @@ service rsyslog start
 service apache2 start
 service mysql start
 service postfix start
+service smbd start
 
 if [ ! -e /started ]; then
   mysql -uroot -e "GRANT ALL PRIVILEGES ON *.* TO 'debian-sys-maint'@'localhost' IDENTIFIED BY 'asdjklsd1xja' WITH GRANT OPTION;"
@@ -34,6 +35,7 @@ touch /started
 
 trap_TERM() {
   echo 'SIGTERM ACCEPTED.'
+  service smbd stop
   service apache2 stop
   service mysql stop
   service postfix stop
