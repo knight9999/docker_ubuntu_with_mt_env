@@ -60,6 +60,8 @@ $ docker volume rm mt-storage
 
 ## コンテナの起動
 
+### Macの場合
+
 例えば、`mt_server`という名前のコンテナを作成するのであれば、次のようにします。
 
 ```
@@ -83,10 +85,68 @@ $ docker run --privileged -d --name mt_server -p 8022:22 -p 8080:80 -v `pwd`/mt:
 
 のようにします。
 
+### Windowsの場合
+
+[注意]
+gitbashの設定で、
+
+```
+git config --global core.autoCRLF false
+```
+
+などの設定をして、githubからcloneしたテキストコードの改行がCRLFではなくLFになるようにしてください。
+さもないと、buildしたときに、改行コードがCRLFしたものが組み込まれていまい、ビルドエラーになります。
+
+windowsの場合は、ディレクトリをマウントするとコンテナ側で権限が0755となってしまうため、上記の方法は使えません。そこで、次のようにmysqlだけmt-storageにマウントします。(mt-storageは、あらかじめ作成したmysqlのボリュームです)
 
 
-これでデーモンが起動しますが、ターミナルは開きません。(本Dockerfileのv1.0とは違います)
-ターミナルを開く場合は、後述の`docker exec`を使ってください。
+```
+$ docker run --privileged -d --name mt_server -p 8022:22 -p 8080:80 -v /path/to/etc:/var/mt/etc -v mt-storage:/var/db/mysql  -it ubuntu_with_mt_env
+```
+etcを書き換える必要がない場合は、マウントしなくてかまいません。
+
+```
+$ docker run --privileged -d --name mt_server -p 8022:22 -p 8080:80 -v mt-storage:/var/db/mysql  -it ubuntu_with_mt_env
+```
+
+このままだと、Apacheでマウントするのはコンテナ側の/var/mt/wwwになります。
+そこで、Windows側で共有フォルダを作成します。
+
+![windows_share_folder](./settings.png)
+
+ここで設定した共有ディレクトリは、mtです。このディレクトリの配下にwwwを作成しておきます。
+すると、このwwwは、Windows側から `\\localhost\mt\www` でアクセスすることができます。
+
+この状態で、このディレクトリをコンテナ側からマウントするには、次のコマンドを実行します。
+
+```
+$ docker exec -it mt_server win-mount ユーザー名　/mt/www
+```
+
+ここでmt_serverはコンテナ名です。自分の環境に合わせたものにしてください。また、ユーザー名は、共有ディレクトリにアクセスできるユーザー名です。 `/mt/www`は、マウントする対象となるディレクトリです。`\\localhost\mt\www`から、`\\localhost`の部分を除いたものを記述します。
+
+パスワードを聞かれるので、適切に答えると、マウントされます。
+
+マウントを解除するには
+
+```
+$ docker exec -it mt_server win-umount
+```
+
+を実行します。
+
+
+現在マウントされているかどうかを確認するには
+
+```
+$ docker exec -it mt_server win-checkmount
+```
+
+を実行します。
+
+
+
+
 
 ## コンテナへのログイン
 
