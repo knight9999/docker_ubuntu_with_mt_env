@@ -24,6 +24,16 @@ $ docker pull knaito/ubuntu_with_mt_env
 
 なお、ベースになっている`knaito/ubuntu_with_lamp:1.1`のgit repositoryは https://github.com/knight9999/docker_ubuntu_with_lamp です。
 
+[注意]
+gitbashの設定で、
+
+```
+git config --global core.autoCRLF false
+```
+
+などの設定をして、githubからcloneしたテキストコードの改行がCRLFではなくLFになるようにしてください。
+さもないと、buildしたときに、改行コードがCRLFしたものが組み込まれていまい、ビルドエラーになります。
+
 
 
 # 使い方
@@ -86,16 +96,6 @@ $ docker run --privileged -d --name mt_server -p 8022:22 -p 8080:80 -v `pwd`/mt:
 のようにします。
 
 ### Windowsの場合
-
-[注意]
-gitbashの設定で、
-
-```
-git config --global core.autoCRLF false
-```
-
-などの設定をして、githubからcloneしたテキストコードの改行がCRLFではなくLFになるようにしてください。
-さもないと、buildしたときに、改行コードがCRLFしたものが組み込まれていまい、ビルドエラーになります。
 
 windowsの場合は、ディレクトリをマウントするとコンテナ側で権限が0755となってしまうため、上記の方法は使えません。そこで、次のようにmysqlだけmt-storageにマウントします。(mt-storageは、あらかじめ作成したmysqlのボリュームです)
 
