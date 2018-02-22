@@ -20,7 +20,11 @@ docker hubにビルド済みのイメージがあります。こちらを使う�
 $ docker pull knaito/ubuntu_with_mt_env
 ```
 
-とします。こちらを使う場合は、イメージファイルの作成をスキップし、以後、ubuntu_with_mt_envは、knaito/ubuntu_with_mt_envと読み替えてください。
+とします。こちらを使う場合は、イメージファイルの作成をスキップし、以後、ubuntu_with_mt_envは、knaito/ubuntu_with_mt_envと読み替えてください。（または、
+```
+$ docker tag knaito/ubuntu_with_mt_env ubuntu_with_mt_env
+```
+でタグづけしてください）
 
 なお、ベースになっている`knaito/ubuntu_with_lamp:1.1`のgit repositoryは https://github.com/knight9999/docker_ubuntu_with_lamp です。
 
