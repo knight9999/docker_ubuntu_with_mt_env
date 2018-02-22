@@ -79,7 +79,7 @@ $ docker volume rm mt-storage
 例えば、`mt_server`という名前のコンテナを作成するのであれば、次のようにします。
 
 ```
-$ docker run --privileged -d --name mt_server -p 8022:22 -p 8080:80 -v /path/to/shared/directory:/var/mt/ -v mt-storage:/var/db/mysql  -it ubuntu_with_mt_env
+$ docker run --privileged -d --name mt_server -p 8080:80 -v /path/to/shared/directory:/var/mt/ -v mt-storage:/var/db/mysql  -it ubuntu_with_mt_env
 ```
 
 ここで、/path/to/shared/directoryは、マウントするディレクトリです。このディレクトリの下にwwwディレクトリが（もしなければ）作成され、以後、Apacheによりマウントされます。
@@ -87,36 +87,59 @@ $ docker run --privileged -d --name mt_server -p 8022:22 -p 8080:80 -v /path/to/
 macであれば`pwd`を使って
 
 ```
-$ docker run --privileged -d --name mt_server -p 8022:22 -p 8080:80 -v `pwd`/mt:/var/mt/ -v mt-storage:/var/db/mysql  -it ubuntu_with_mt_env
+$ docker run --privileged -d --name mt_server -p 8080:80 -v `pwd`/mt:/var/mt/ -v mt-storage:/var/db/mysql  -it ubuntu_with_mt_env
 ```
 
 ともできます。また、上記ではmt-storageというボリュームをコンテナ内の/var/db/mysqlにマウントしていますが、macの場合、mysqlのボリュームを直接ディレクトリにマウントしてもOKです。
 その場合は、例えば自分のローカルにmysqlというディレクトリを作成して
 
 ```
-$ docker run --privileged -d --name mt_server -p 8022:22 -p 8080:80 -v `pwd`/mt:/var/mt/ -v `pwd`/mysql:/var/db/mysql  -it ubuntu_with_mt_env
+$ docker run --privileged -d --name mt_server -p 8080:80 -v `pwd`/mt:/var/mt/ -v `pwd`/mysql:/var/db/mysql  -it ubuntu_with_mt_env
 ```
 
 のようにします。
 
 ### Windowsの場合
 
-windowsの場合は、ディレクトリをマウントするとコンテナ側で権限が0755となってしまうため、上記の方法は使えません。そこで、次のようにmysqlだけmt-storageにマウントします。(mt-storageは、あらかじめ作成したmysqlのボリュームです)
+windowsの場合は、ディレクトリをマウントするとコンテナ側で権限が0755となってしまうため、上記の方法は使えません。そこで、次のようにwww用のボリュームを作成して（ここではmt-wwwとします）、
 
+mysqlのボリュームmt-storageとともにマウントします。
 
 ```
-$ docker run --privileged -d --name mt_server -p 8022:22 -p 8080:80 -v /path/to/etc:/var/mt/etc -v mt-storage:/var/db/mysql  -it ubuntu_with_mt_env
+$ docker volume create mt-www
+```
+
+```
+$ docker run --privileged -d --name mt_server -p 8080:80 -v /path/to/etc:/var/mt/etc -v mt-www:/var/mt/www  mt-storage:/var/db/mysql  -it ubuntu_with_mt_env
 ```
 etcを書き換える必要がない場合は、マウントしなくてかまいません。
 
 ```
-$ docker run --privileged -d --name mt_server -p 8022:22 -p 8080:80 -v mt-storage:/var/db/mysql  -it ubuntu_with_mt_env
+$ docker run --privileged -d --name mt_server -p 8080:80 -v mt-www:/var/mt/www -v mt-storage:/var/db/mysql  -it ubuntu_with_mt_env
 ```
 
-このままだと、Apacheでマウントするのはコンテナ側の/var/mt/wwwになります。
-そこで、Windows側で共有フォルダを作成します。
+mtの本体をボリュームにコピーする
+
+```
+$ docker cp MT-7.0a2 mt_server:/var/mt/www/mt
+```
+
+この後、通常のMTと同じように権限を設定します。
+
+```
+$ docker exec -it mt_server bash
+```
+
+linuxコマンドを叩いて、権限を設定してください。
+
+### Windows側の共有ファイルを共有する場合（Deprecated)
+
+mt-wwwのようなボリュームを作成せず、windows側で作成したフォルダを共有する場合。
+まず、Windows側で共有フォルダを作成します。
 
 ![windows_share_folder](./settings.png)
+
+アクセス許可を設定し、フルコントロールを設定出来るようにしておいてください。
 
 ここで設定した共有ディレクトリは、mtです。このディレクトリの配下にwwwを作成しておきます。
 すると、このwwwは、Windows側から `\\localhost\mt\www` でアクセスすることができます。
@@ -148,8 +171,8 @@ $ docker exec -it mt_server win-checkmount
 
 を実行します。
 
-
-
+[注意]　Windows側のフォルダを共有する方法は、IO制限なのか、MTのpublishがうまくいかない場合があります。
+この問題は現在調査中です。
 
 
 ## コンテナへのログイン
