@@ -132,6 +132,7 @@ $ docker exec -it mt_server bash
 
 linuxコマンドを叩いて、権限を設定してください。
 
+
 ### Windows側の共有ファイルを共有する場合（Deprecated)
 
 mt-wwwのようなボリュームを作成せず、windows側で作成したフォルダを共有する場合。
@@ -171,7 +172,8 @@ $ docker exec -it mt_server win-checkmount
 
 を実行します。
 
-[注意]　Windows側のフォルダを共有する方法は、IO制限なのか、MTのpublishがうまくいかない場合があります。
+[注意]　この方法は非常に重く、また以下に示す問題を解決出来ていないため、Deprecatedとします。
+Windows側のフォルダを共有する方法は、IO制限なのか、MTのpublishがうまくいかない場合があります。
 この問題は現在調査中です。
 
 
