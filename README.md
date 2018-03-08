@@ -190,7 +190,7 @@ $ docker exec -it mt_server bash
 
 ## MTファイルの配置
 
-一番簡単に使うのであれば、コンテナ上のDocument Root /var/mt/wwwの下に(ホスト上のマウントしているディレクトリ`/path/to/shared/directory`の下の`www`の下でも良い)、mtファイルの一式を起きます。
+一番簡単に使うのであれば、コンテナ上のDocument Root /var/mt/wwwの下に(Macであればホスト上のマウントしているディレクトリ`/path/to/shared/directory`の下の`www`の下でも良い。Windowsでは、docker cpコマンドなどでコピーします)、mtファイルの一式を起きます。
 
 ディレクトリ構成は
 
@@ -204,6 +204,8 @@ mt
         - support
 ```
 となります。
+
+
 
 wwwとmtディレクトリは、読み書き可能にして下さい。(MTをインストール完了後は、mtディレクトリは書き込み不可にしても大丈夫です。いつものmtの設定です)
 
