@@ -35,6 +35,10 @@ RUN apt-get install -y dnsutils
 
 RUN apt-get install -y systemd
 
+RUN mkdir /var/mt
+
+RUN chmod a+w /var/mt
+
 COPY files/entry-script.bash /entry-script.bash
 
 RUN chmod a+x /entry-script.bash

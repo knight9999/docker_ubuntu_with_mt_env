@@ -57,7 +57,7 @@ $ docker build -t ubuntu_with_mt_env .
 例えば、`mt-storage`という名前のボリュームを作成するのであれば、
 
 ```
-$ docker volume create mt-storge
+$ docker volume create mt-storage
 ```
 
 確認
@@ -109,10 +109,18 @@ mysqlのボリュームmt-storageとともにマウントします。
 $ docker volume create mt-www
 ```
 
+また、設定用のファイルであるmt-etcも作成しておきます。
+
 ```
-$ docker run --privileged -d --name mt_server -p 8080:80 -v /path/to/etc:/var/mt/etc -v mt-www:/var/mt/www  mt-storage:/var/db/mysql  -it ubuntu_with_mt_env
+$ docker volume create mt-etc
 ```
-etcを書き換える必要がない場合は、マウントしなくてかまいません。
+
+(mt-etcはmt側から上書きしないので、直接Windowsフォルダをマウントしても良いのですが、Dockerの設定をしなくてはいけないなどちょっと面倒なので、ここでは作成しています)
+
+```
+$ docker run --privileged -d --name mt_server -p 8080:80 -v mt-etc:/var/mt/etc -v mt-www:/var/mt/www -v mt-storage:/var/db/mysql  -it ubuntu_with_mt_env
+```
+etcを書き換える必要がない場合は、マウントしなくてかまいません。ちょっと確認するだけならこれでもOKですが、メールサーバーの設定などが必要になると、etcを書き換えることになるので、マウントして置いた方がオススメです。
 
 ```
 $ docker run --privileged -d --name mt_server -p 8080:80 -v mt-www:/var/mt/www -v mt-storage:/var/db/mysql  -it ubuntu_with_mt_env
@@ -196,7 +204,7 @@ MTの中のTheme.pm の install_static_filesの中の
 ```
     File::Find::find( { wanted => $sub, no_chdir => 1, follow => 1, }, $src );
 ```
-と変更すれば対応可能です。
+と変更すれば、Windowsの共有フォルダに対してもpublishが成功します。
 
 ## コンテナへのログイン
 
