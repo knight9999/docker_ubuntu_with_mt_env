@@ -2,8 +2,8 @@
 
 if [ ! -e /var/mt/www ]; then
   mkdir -p /var/mt/www
-  chmod a+w /var/mt/www
 fi
+chmod a+w /var/mt/www
 
 if [ ! -e /var/db/mysql ]; then
   mkdir -p /var/db/mysql
@@ -13,6 +13,7 @@ chmod a+w /var/db/mysql
 cp -rpn /var/lib/mysql/* /var/db/mysql/
 
 mkdir -p /var/mt/etc
+chmod a+w /var/mt/etc
 
 cp -rpf /var/mt/etc/* /etc/
 
