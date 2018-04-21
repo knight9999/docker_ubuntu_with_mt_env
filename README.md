@@ -118,7 +118,7 @@ $ docker volume create mt-etc
 (mt-etcはmt側から上書きしないので、直接Windowsフォルダをマウントしても良いのですが、Dockerの設定をしなくてはいけないなどちょっと面倒なので、ここでは作成しています)
 
 ```
-$ docker run --privileged -d --name mt_server -p 8080:80 -v mt-etc:/var/mt/etc -v mt-www:/var/mt/www -v mt-storage:/var/db/mysql  -it ubuntu_with_mt_env
+$ docker run --privileged -d --name mt_server -p 8080:80 -v mt-etc:/var/mt/etc -v mt-www:/var/mt/www -v mt-storage:/var/db/mysql -it ubuntu_with_mt_env
 ```
 etcを書き換える必要がない場合は、マウントしなくてかまいません。ちょっと確認するだけならこれでもOKですが、メールサーバーの設定などが必要になると、etcを書き換えることになるので、マウントして置いた方がオススメです。
 
