@@ -51,6 +51,6 @@ COPY files/win-checkmount.bash /bin/win-checkmount
 
 RUN chmod a+x /bin/win-checkmount
 
-COPY files/.vimrc /.vimrc
+COPY files/.vimrc /root/.vimrc
 
 CMD ["/entry-script.bash"]
