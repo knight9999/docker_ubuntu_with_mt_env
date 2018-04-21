@@ -136,7 +136,14 @@ linuxコマンドを叩いて、権限を設定してください。
 ### Windows側の共有ファイルを共有する場合（Deprecated)
 
 mt-wwwのようなボリュームを作成せず、windows側で作成したフォルダを共有する場合。
-まず、Windows側で共有フォルダを作成します。
+
+docker runのときに、/var/mt/wwwには何もマウントしません。
+
+```
+$ docker run --privileged -d --name mt_server -p 8080:80 -v mt-storage:/var/db/mysql  -it ubuntu_with_mt_env
+```
+
+そして、Windows側で共有フォルダを作成します。
 
 ![windows_share_folder](./settings.png)
 
