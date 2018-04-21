@@ -151,6 +151,8 @@ mt-wwwのようなボリュームを作成せず、windows側で作成したフ�
 $ docker exec -it mt_server win-mount ユーザー名　/mt/www
 ```
 
+( `win-mount` コマンドが何をしているのかは `files/win-mount.bash` を見てください。パラメータを取得して、`mount` コマンドで `cifs` マウントしているだけです)
+
 ここでmt_serverはコンテナ名です。自分の環境に合わせたものにしてください。また、ユーザー名は、共有ディレクトリにアクセスできるユーザー名です。 `/mt/www`は、マウントする対象となるディレクトリです。`\\localhost\mt\www`から、`\\localhost`の部分を除いたものを記述します。
 
 パスワードを聞かれるので、適切に答えると、マウントされます。
@@ -176,6 +178,18 @@ $ docker exec -it mt_server win-checkmount
 Windows側のフォルダを共有する方法は、IO制限なのか、MTのpublishがうまくいかない場合があります。
 この問題は現在調査中です。
 
+[2018/04/21追記]
+
+MTの中のTheme.pm の install_static_filesの中の
+
+```
+    File::Find::find( { wanted => $sub, no_chdir => 1, }, $src );
+```
+を
+```
+    File::Find::find( { wanted => $sub, no_chdir => 1, follow => 1, }, $src );
+```
+と変更すれば対応可能です。
 
 ## コンテナへのログイン
 
