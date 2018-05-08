@@ -101,29 +101,16 @@ $ docker run --privileged -d --name mt_server -p 8080:80 -v `pwd`/mt:/var/mt/ -v
 
 ### Windowsの場合
 
-windowsの場合は、ディレクトリをマウントするとコンテナ側で権限が0755となってしまうため、上記の方法は使えません。そこで、次のようにwww用のボリュームを作成して（ここではmt-wwwとします）、
+windowsの場合は、ディレクトリをマウントするとコンテナ側で権限が0755となってしまうため、上記の方法は使えません。そこで、次のようにwww用のボリュームを作成して（ここではmt-mainとします）、
 
 mysqlのボリュームmt-storageとともにマウントします。
 
 ```
-$ docker volume create mt-www
+$ docker volume create mt-main
 ```
 
-また、設定用のファイルであるmt-etcも作成しておきます。
-
 ```
-$ docker volume create mt-etc
-```
-
-(mt-etcはmt側から上書きしないので、直接Windowsフォルダをマウントしても良いのですが、Dockerの設定をしなくてはいけないなどちょっと面倒なので、ここでは作成しています)
-
-```
-$ docker run --privileged -d --name mt_server -p 8080:80 -v mt-etc:/var/mt/etc -v mt-www:/var/mt/www -v mt-storage:/var/db/mysql -it ubuntu_with_mt_env
-```
-etcを書き換える必要がない場合は、マウントしなくてかまいません。ちょっと確認するだけならこれでもOKですが、メールサーバーの設定などが必要になると、etcを書き換えることになるので、マウントして置いた方がオススメです。
-
-```
-$ docker run --privileged -d --name mt_server -p 8080:80 -v mt-www:/var/mt/www -v mt-storage:/var/db/mysql  -it ubuntu_with_mt_env
+$ docker run --privileged -d --name mt_server -p 8080:80 -v mt-main:/var/mt -v mt-storage:/var/db/mysql -it ubuntu_with_mt_env
 ```
 
 mtの本体をボリュームにコピーする
@@ -138,8 +125,24 @@ $ docker cp MT-7.0a2 mt_server:/var/mt/www/mt
 $ docker exec -it mt_server bash
 ```
 
-linuxコマンドを叩いて、権限を設定してください。
+でコンテナにログインし、linuxコマンドを叩いて、次のように権限を設定してください。
 
+- `/var/mt/www`               ... 書き込み許可(ここにMTが出力するため)
+- `/var/mt/www/mt`            ... 書き込み許可(インストール時にmt-config.cgiを出力するため。インストール後は書き込み不許可にしてOK)
+- `/var/mt/www/mt/*.cgi`      ... 実行可能
+- `/var/mt/mt-static/support` ... 書き込み許可(サブディレクト以下も含めて、すべて書き込み許可)
+
+```
+$ cd /var/mt
+$ chmod a+w www
+$ chmod a+w www/mt
+$ chmod a+x www/mt/*.cgi
+$ chmod -R a+w /var/mt/mt-static/support
+```
+
+## MTのインストール
+
+ブラウザで `http://localhost:8080` にアクセスしてください
 
 ### Windows側の共有ファイルを共有する場合（Deprecated)
 
@@ -213,9 +216,6 @@ MTの中のTheme.pm の install_static_filesの中の
 ```
 $ docker exec -it mt_server bash
 ```
-
-
-
 
 ## MTファイルの配置
 
